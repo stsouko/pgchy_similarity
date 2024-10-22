@@ -10,7 +10,7 @@ PG_CONFIG = pg_config
 
 # COPT += -O3 
 # COPT += -msse4.2
-# COPT += -mavx2 
+COPT += -mavx2 
 
 
 PGXS := $(shell $(PG_CONFIG) --pgxs)

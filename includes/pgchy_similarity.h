@@ -16,7 +16,7 @@ typedef struct {
 int check_popcounts(Fingerprint* fingerprint1, Fingerprint* fingerprint2, float threshold);
 
 
-void and_vector_256(const uint8_t *fingerprint1, const uint8_t *fingerprint2, uint8_t *output);
+int popcount_and(const uint8_t *arr1, const uint8_t *arr2);
 
 
 int similarity_256(Fingerprint* fingerprint1, Fingerprint* fingerprint2, float threshold);
