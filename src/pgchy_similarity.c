@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <immintrin.h>
 
 #include <includes/pgchy_similarity.h>
 
