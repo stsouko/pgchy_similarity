@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stddef.h>
-#include <libpopcnt.h>
 
 #include <includes/pgchy_similarity.h>
 
