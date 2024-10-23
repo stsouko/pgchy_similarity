@@ -16,7 +16,7 @@ import numpy as np
 import struct
 try:
     query_mol = chython.smiles(smiles)
-    morgan = query_mol.morgan_fingerprint(length=2048)
+    morgan = query_mol.morgan_fingerprint(length=2048, max_radius=3)
     bytes_morgan = np.packbits(morgan, bitorder='little').tobytes(order='C')
     popcount = morgan.sum()
     return struct.pack('<h256s', popcount, bytes_morgan)
