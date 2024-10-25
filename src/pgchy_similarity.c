@@ -57,28 +57,28 @@ int popcount_and(const uint8_t *arr1, const uint8_t *arr2) {
 }
 
 
-int check_popcounts(Fingerprint* fingerprint1, Fingerprint* fingerprint2, float threshold) {
-    uint16_t popcount1 = fingerprint1->popcount;
-    uint16_t popcount2 = fingerprint2->popcount;
+bool check_popcounts(uint16_t popcount1, uint16_t popcount2, float threshold) {
+    // The threshold scaled popcount of the larger (feature richer) molecule
+    // should not be larger than that of the smaller one.
     if (popcount1 > popcount2) {
-        return (popcount2 < (threshold * popcount1)) ? 0 : 1;
+        return popcount2 >= (threshold * popcount1);
     }
-    return (popcount1 < (threshold * popcount2)) ? 0 : 1;
+    return (popcount1 >= (threshold * popcount2));
 }
 
 
-int similarity_256(Fingerprint* fingerprint1, Fingerprint* fingerprint2, float threshold) {
+bool similarity_256(Fingerprint* fingerprint1, Fingerprint* fingerprint2, float threshold) {
     uint64_t intersection;
     uint64_t union_count;
 
-    if (check_popcounts(fingerprint1, fingerprint2, threshold) == 0) {
-        return 0;
+    if (!check_popcounts(fingerprint1->popcount, fingerprint2->popcount, threshold)) {
+        return false;
     }
 
     intersection = popcount_and(fingerprint1->arr, fingerprint2->arr);
     union_count = fingerprint1->popcount + fingerprint2->popcount - intersection;
 
-    return ((float)intersection / (float)union_count >= threshold) ? 1 : 0;
+    return (float)intersection / (float)union_count >= threshold;
 }
 
 
@@ -99,7 +99,7 @@ Datum is_tanimoto_similar(PG_FUNCTION_ARGS) {
     query_fingerprint = (Fingerprint*) VARDATA(query_bytes);
     mol_fingerprint = (Fingerprint*) VARDATA(mol_bytes);
 
-    result = similarity_256(query_fingerprint, mol_fingerprint, threshold) > 0;
+    result = similarity_256(query_fingerprint, mol_fingerprint, threshold);
 
     PG_RETURN_BOOL(result);
 }
